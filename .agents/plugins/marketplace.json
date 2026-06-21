@@ -1,0 +1,22 @@
+{
+  "name": "rahul-codex-skills",
+  "interface": {
+    "displayName": "Rahul Codex Skills"
+  },
+  "plugins": [
+    {
+      "name": "rahul-codex-skills",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/rahulvramesh/codex-skills.git",
+        "path": "./plugins/rahul-codex-skills",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

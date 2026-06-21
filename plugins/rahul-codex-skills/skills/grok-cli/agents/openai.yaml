@@ -1,0 +1,4 @@
+interface:
+  display_name: "Grok CLI"
+  short_description: "Use Grok CLI as a fast auxiliary agent"
+  default_prompt: "Use $grok-cli to get a second-pass answer or design critique with the local Grok CLI."
