@@ -1,13 +1,13 @@
 {
   "name": "rahul-codex-skills",
   "version": "0.1.0",
-  "description": "Reusable Codex skills for image generation, Grok CLI workflows, and Chronicle context.",
+  "description": "Reusable Codex skills for image generation and Grok CLI workflows.",
   "author": {
     "name": "Rahul V Ramesh",
     "url": "https://github.com/rahulvramesh"
   },
-  "homepage": "https://github.com/rahulvramesh/codex-skills",
-  "repository": "https://github.com/rahulvramesh/codex-skills",
+  "homepage": "https://github.com/rahulvramesh/skills",
+  "repository": "https://github.com/rahulvramesh/skills",
   "license": "MIT",
   "keywords": [
     "codex",
@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "Rahul Codex Skills",
     "shortDescription": "Reusable Codex workflows by Rahul V Ramesh.",
-    "longDescription": "A curated bundle of Codex skills for OpenAI Image API work, Grok CLI second-opinion workflows, and Chronicle screen-context workflows.",
+    "longDescription": "A curated bundle of Codex skills for OpenAI Image API work and Grok CLI second-opinion workflows.",
     "developerName": "Rahul V Ramesh",
     "category": "Productivity",
     "capabilities": [
@@ -28,11 +28,10 @@
       "CLI automation",
       "Image generation"
     ],
-    "websiteURL": "https://github.com/rahulvramesh/codex-skills",
+    "websiteURL": "https://github.com/rahulvramesh/skills",
     "defaultPrompt": [
       "Use $grok-cli to critique this plan.",
-      "Use $imagegen to create a product visual.",
-      "Use $chronicle to resolve recent-screen context."
+      "Use $imagegen to create a product visual."
     ],
     "brandColor": "#2563EB"
   }

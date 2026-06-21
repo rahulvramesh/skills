@@ -6,7 +6,6 @@ Reusable Codex skills packaged as an installable plugin and marketplace.
 
 - `grok-cli`: use the local `grok` CLI as a second-opinion agent for quick solutions, design critique, headless automation, and session inspection.
 - `imagegen`: generate and edit images through the OpenAI Image API using a reproducible bundled CLI.
-- `chronicle`: use Codex Chronicle screen context when the local Chronicle feature is enabled.
 
 ## Why This Layout
 
@@ -25,20 +24,20 @@ Codex skills are directories anchored by `SKILL.md`, with optional `scripts/`, `
 Install the plugin directly from the plugin subdirectory:
 
 ```bash
-codex plugin install https://github.com/rahulvramesh/codex-skills.git#plugins/rahul-codex-skills
+codex plugin install https://github.com/rahulvramesh/skills.git#plugins/rahul-codex-skills
 ```
 
 Or add this repository as a marketplace:
 
 ```bash
-codex plugin marketplace add https://github.com/rahulvramesh/codex-skills.git
+codex plugin marketplace add https://github.com/rahulvramesh/skills.git
 ```
 
 If your Codex build expects a local marketplace, clone the repo and add the local marketplace root:
 
 ```bash
-git clone https://github.com/rahulvramesh/codex-skills.git
-codex plugin marketplace add ./codex-skills
+git clone https://github.com/rahulvramesh/skills.git
+codex plugin marketplace add ./skills
 ```
 
 Restart Codex after installing or updating a plugin if changes do not appear immediately.
@@ -50,7 +49,6 @@ Invoke a skill explicitly:
 ```text
 Use $grok-cli to critique this implementation plan.
 Use $imagegen to create a product hero image.
-Use $chronicle to resolve what I had open recently.
 ```
 
 Codex can also choose a skill implicitly when the user request matches its `description`.
@@ -73,7 +71,6 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py plugin
 
 - `imagegen` requires `OPENAI_API_KEY` for live API calls.
 - `grok-cli` requires the `grok` CLI and a working Grok login.
-- `chronicle` only works when Codex Chronicle is enabled locally.
 
 ## References
 
