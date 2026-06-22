@@ -36,7 +36,7 @@
     "defaultPrompt": [
       "Use $grok-cli to critique this plan.",
       "Use $imagegen to create a product visual.",
-      "Use $xquik to plan an X data workflow."
+      "Use $xquik to plan an X public data workflow."
     ],
     "brandColor": "#2563EB"
   }
