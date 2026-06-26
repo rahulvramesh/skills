@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run `grok` headlessly with safer defaults and clean parsing."""
+"""Run `grok` headlessly with full-agent defaults and clean parsing."""
 
 from __future__ import annotations
 
@@ -43,18 +43,24 @@ def build_command(args: argparse.Namespace) -> list[str]:
         cmd.extend(["--cwd", str(args.cwd)])
     if args.model:
         cmd.extend(["--model", args.model])
-    if args.no_wait:
+    if not args.wait_background:
         cmd.append("--no-wait-for-background")
     if args.max_turns is not None:
         cmd.extend(["--max-turns", str(args.max_turns)])
-    if not args.allow_web_search:
+    if not args.web_search:
         cmd.append("--disable-web-search")
-    if not args.allow_subagents:
+    if not args.subagents:
         cmd.append("--no-subagents")
     if not args.memory:
         cmd.append("--no-memory")
+    if args.experimental_memory:
+        cmd.append("--experimental-memory")
     if args.check:
         cmd.append("--check")
+    if args.full_permission:
+        args.always_approve = True
+        if not args.permission_mode:
+            args.permission_mode = "bypassPermissions"
     if args.always_approve:
         cmd.append("--always-approve")
     if args.permission_mode:
@@ -89,14 +95,25 @@ def main() -> int:
     parser.add_argument("--prompt-file", type=Path, help="Prompt file path.")
     parser.add_argument("--prompt-json", help="JSON content blocks for Grok.")
     parser.add_argument("--output-format", choices=["plain", "json", "streaming-json"], default="json")
-    parser.add_argument("--max-turns", type=int, default=1)
+    parser.add_argument("--max-turns", type=int, default=None)
     parser.add_argument("--timeout", type=int, default=180)
-    parser.add_argument("--background-wait", dest="no_wait", action="store_false", help="Allow Grok's default background wait.")
-    parser.set_defaults(no_wait=True)
-    parser.add_argument("--allow-web-search", action="store_true")
-    parser.add_argument("--allow-subagents", action="store_true")
-    parser.add_argument("--memory", action="store_true")
+    parser.add_argument("--background-wait", dest="wait_background", action="store_true", help="Wait for background work; this is the default.")
+    parser.add_argument("--no-wait-for-background", dest="wait_background", action="store_false", help="Return without waiting for background work.")
+    parser.set_defaults(wait_background=True)
+    parser.add_argument("--allow-web-search", dest="web_search", action="store_true", help="Allow web tools; this is the default.")
+    parser.add_argument("--disable-web-search", dest="web_search", action="store_false", help="Disable web search/fetch tools.")
+    parser.set_defaults(web_search=True)
+    parser.add_argument("--allow-subagents", dest="subagents", action="store_true", help="Allow subagents; this is the default.")
+    parser.add_argument("--no-subagents", dest="subagents", action="store_false", help="Disable subagent spawning.")
+    parser.set_defaults(subagents=True)
+    parser.add_argument("--memory", dest="memory", action="store_true", help="Allow Grok memory; this is the default.")
+    parser.add_argument("--no-memory", dest="memory", action="store_false", help="Disable Grok memory for this run.")
+    parser.set_defaults(memory=True)
+    parser.add_argument("--experimental-memory", action="store_true", help="Pass Grok's --experimental-memory flag.")
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--full-permission", dest="full_permission", action="store_true", help="Auto-approve tools and use bypassPermissions; this is the default.")
+    parser.add_argument("--review-permissions", dest="full_permission", action="store_false", help="Do not auto-approve tools by default.")
+    parser.set_defaults(full_permission=True)
     parser.add_argument("--always-approve", action="store_true")
     parser.add_argument("--permission-mode", choices=["default", "acceptEdits", "auto", "dontAsk", "bypassPermissions", "plan"])
     parser.add_argument("--tools")

@@ -55,7 +55,9 @@ def main() -> int:
     parser.add_argument("--continue", dest="continue_latest", action="store_true", help="Continue the latest conversation")
     parser.add_argument("--conversation", help="Resume a specific conversation ID")
     parser.add_argument("--sandbox", action="store_true", help="Run with Antigravity sandbox restrictions")
-    parser.add_argument("--auto-approve", action="store_true", help="Pass --dangerously-skip-permissions")
+    parser.add_argument("--auto-approve", dest="auto_approve", action="store_true", help="Pass --dangerously-skip-permissions; this is the default.")
+    parser.add_argument("--review-permissions", dest="auto_approve", action="store_false", help="Do not pass --dangerously-skip-permissions.")
+    parser.set_defaults(auto_approve=True)
     args = parser.parse_args()
 
     prompt = read_prompt(args)

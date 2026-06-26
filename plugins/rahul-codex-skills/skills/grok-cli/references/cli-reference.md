@@ -1,6 +1,6 @@
 # Grok CLI Reference
 
-Observed on 2026-06-21 with `grok 0.2.59 (d73c632f81a) [stable]`. Re-run `grok --help`, `grok version --json`, and `grok models` if exact behavior matters.
+Observed on 2026-06-26 with `grok 0.2.67 (03e13f99286)`. Re-run `grok --help`, `grok version --json`, and `grok models` if exact behavior matters.
 
 ## Known Models
 
@@ -32,20 +32,17 @@ List models:
 grok models
 ```
 
-Fast headless JSON call:
+Full-permission headless JSON call:
 
 ```bash
-grok --no-wait-for-background --max-turns 1 --disable-web-search --no-subagents --no-memory \
-  --output-format json \
+grok --cwd "$PWD" --always-approve --permission-mode bypassPermissions --output-format json \
   -p "Return a concise answer to: ..."
 ```
 
 Prompt file:
 
 ```bash
-grok --no-wait-for-background --max-turns 1 --disable-web-search --no-subagents --no-memory \
-  --tools "" \
-  --output-format json \
+grok --cwd "$PWD" --always-approve --permission-mode bypassPermissions --output-format json \
   --prompt-file /absolute/path/to/prompt.md
 ```
 
@@ -53,8 +50,7 @@ Long-running implementation in a disposable folder:
 
 ```bash
 grok --cwd /absolute/path/to/lab --fs-read --fs-write --terminal \
-  --always-approve --permission-mode acceptEdits \
-  --background-wait-timeout 60 --max-turns 4 \
+  --always-approve --permission-mode bypassPermissions \
   -p "Implement this prototype, then summarize created files and verification."
 ```
 
@@ -74,19 +70,18 @@ For Codex automation, use `json` and ignore or strip any `thought` field. Captur
 - `--prompt-json <JSON>`: content-block input for structured/multimodal capable workflows.
 - `--output-format plain|json|streaming-json`: choose parseability.
 - `--model <MODEL>`: select `grok-build` or another listed model.
-- `--max-turns <N>`: bound cost and time.
-- `--no-wait-for-background`: return after the first turn instead of waiting up to the default 600 seconds for background work.
-- `--background-wait-timeout <SECS>`: lower this if background work must be allowed but bounded.
-- `--disable-web-search`: prevent web tools for local-only or deterministic work.
-- `--no-subagents`: prevent subagent fan-out for quick calls.
-- `--no-memory`: avoid cross-session memory.
+- `--max-turns <N>`: bound cost and time when a constrained run is explicitly wanted.
+- `--no-wait-for-background`: return after the first turn instead of waiting for background work.
+- `--disable-web-search`: opt out of web tools for explicitly local-only work.
+- `--no-subagents`: opt out of subagent fan-out for explicitly constrained calls.
+- `--no-memory`: opt out of cross-session memory.
 - `--check`: append a self-verification loop for headless work.
-- `--always-approve` and `--permission-mode acceptEdits|auto|dontAsk|bypassPermissions|plan`: use only in disposable folders or when the user explicitly wants Grok to execute.
+- `--always-approve` and `--permission-mode bypassPermissions`: grant full tool permission for autonomous runs.
 - `--worktree [NAME]`: start in a new git worktree.
 - `--continue`, `--resume [SESSION_ID]`, `--restore-code`: continue previous work.
 - `--rules <RULES>` and `--system-prompt-override <PROMPT>`: shape behavior when required.
-- `--tools <TOOLS>` and `--disallowed-tools <TOOLS>`: restrict built-in tool access when names are known.
-- `--tools ""`: observed to be accepted as an explicit empty tool allowlist; use for pure no-tool critique and exact-output probes.
+- `--tools <TOOLS>` and `--disallowed-tools <TOOLS>`: restrict built-in tool access only when a constrained run is explicitly wanted.
+- `--tools ""`: observed to be accepted as an explicit empty tool allowlist; do not use by default.
 
 Completion output exposed additional hidden/compatibility flags such as `--storage-mode`, `--client-identifier`, `--hunk-tracker-mode`, `--terminal`, `--fs-read`, `--fs-write`, `--no-ask-user`, `--force-login`, and `--no-auto-update`. Verify with the installed version before relying on them.
 
@@ -140,8 +135,8 @@ Advanced integration:
 - `grok inspect --json` returned the richest discovery result: version/channel, project trust, inherited Claude/Cursor instructions, permissions, hooks, skills, agents, plugins, marketplaces, MCP servers, config sources, and compatibility surfaces.
 - `grok mcp list --json` and `grok plugin list --json` returned empty arrays in the same workspace even though `inspect --json` showed imported compatibility entries. Use `inspect --json` for full discovery; use subcommands for Grok-native config.
 - Headless runs emitted many stderr warnings from plugin name collisions, hook parsing, MCP OAuth requirements, and MCP timeouts. Successful JSON output still appeared on stdout.
-- For design prompt files, include a line like "The written brief is complete. Do not inspect files. Answer from this brief only." Without this, Grok may use the turn to propose inspecting the workspace.
-- Headless file-editing experiments in a disposable lab did not materialize files. One run exported a session containing `Search` and `Edit` tool entries but left no `index.html`; another direct run with `--fs-read --fs-write --terminal` ended with `stopReason: Cancelled` and no file. Treat headless file edits as unreliable here until a current run proves otherwise.
+- For design prompt files, include workspace paths and let Grok inspect files when that can improve the critique. Use answer-only language only for intentionally constrained runs.
+- A 2026-06-26 full-permission headless run through `scripts/grok_headless.py` successfully created `grok_full_permission_probe.txt` in a disposable `--cwd` directory. Verify created files after each run, but do not assume headless edits are unavailable.
 - Parallel model calls hit a `429 Too Many Requests` response at a 2 RPS limit. Keep calls serial.
 - `grok leader list` reported no leader candidates.
 - `grok update --check --json` reported `updateAvailable: false` for version `0.2.59`.

@@ -1,6 +1,6 @@
 {
   "name": "rahul-codex-skills",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Reusable Codex skills for image generation, Grok CLI workflows, and Antigravity CLI workflows.",
   "author": {
     "name": "Rahul V Ramesh",

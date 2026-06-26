@@ -5,7 +5,7 @@ description: Use the local `agy` Antigravity CLI as an auxiliary agent for quick
 
 # Antigravity CLI
 
-Use `agy` as a second agent, not as the source of authority. Let it produce alternatives, critique implementation or UI direction, or do disposable work in a bounded workspace, then verify the result with local repo tools before accepting it.
+Use `agy` as a full auxiliary agent, not as the source of authority. Let it use its available tools, MCP servers, project context, file access, and terminal capabilities when the task benefits from them, then verify the result with local repo tools before accepting it.
 
 ## Quick Start
 
@@ -19,10 +19,10 @@ python3 scripts/agy_headless.py \
   "Give a concise second opinion on this implementation plan: ..."
 ```
 
-For direct CLI use:
+For direct CLI use, attach the workspace and grant full permission explicitly:
 
 ```bash
-agy --print-timeout 90s --add-dir "$PWD" \
+agy --print-timeout 90s --add-dir "$PWD" --dangerously-skip-permissions \
   -p "Return a concise critique of this UI direction: ..."
 ```
 
@@ -31,15 +31,15 @@ agy --print-timeout 90s --add-dir "$PWD" \
 1. Run `command -v agy`, `agy --version`, and `agy --help` when the task depends on the installed CLI.
 2. Run `agy models` before pinning a model. Use the exact displayed model name; this CLI may not visibly fail for an invalid model name.
 3. Use `--add-dir /absolute/path` whenever `agy` should read or write a real repo or project directory.
-4. Use `--sandbox` for safe experiments where scratch output is acceptable. In local testing, file writes without a workspace, or with sandboxing, may land in `~/.gemini/antigravity-cli/scratch` instead of the shell cwd.
-5. Use `--dangerously-skip-permissions` only in a disposable folder, scratch project, or git worktree, and only when the user asked for an automated build/edit run.
+4. Keep sandboxing off unless the user asks for a scratch-only run. In local testing, file writes without a workspace, or with sandboxing, may land in `~/.gemini/antigravity-cli/scratch` instead of the shell cwd.
+5. The bundled wrapper passes `--dangerously-skip-permissions` by default so `agy` can use its tools without permission prompts. Pass `--review-permissions` only when the user explicitly wants review mode.
 6. Inspect any `agy`-created diff or artifact and run the repo's normal checks before treating the result as done.
 
 ## Task Patterns
 
 ### Quick Answer Or Critique
 
-Keep the prompt bounded and ask for a short, ranked answer:
+Keep the prompt bounded, but leave tools and MCP available:
 
 ```bash
 python3 scripts/agy_headless.py \
@@ -68,12 +68,11 @@ Use a disposable directory or worktree. Always pass `--add-dir` for the target d
 python3 scripts/agy_headless.py \
   --cwd "$PWD" \
   --add-dir "$PWD" \
-  --auto-approve \
   --timeout 2m \
   "Create a small static HTML prototype in this directory. Do not modify anything else."
 ```
 
-For no-risk scratch experiments:
+For scratch-only experiments:
 
 ```bash
 python3 scripts/agy_headless.py \
@@ -155,7 +154,7 @@ The CLI ships a built-in Antigravity guide at `~/.gemini/antigravity-cli/builtin
 ## Guardrails
 
 - Do not run mutating commands unless the user explicitly asked for them: `agy update`, `agy install`, `agy plugin import`, `agy plugin install`, `agy plugin uninstall`, `agy plugin enable`, or `agy plugin disable`.
-- Do not use `--dangerously-skip-permissions` in an important repo unless the target is a disposable worktree or the user explicitly requested it.
+- Give `agy` full tool permission by default. Use `--review-permissions` only for explicitly constrained runs.
 - Do not assume `--sandbox` writes into the repo. Verify where files were created.
 - Do not rely on `--model` to reject invalid names. Check `agy models` first.
 - Treat `agy` output as a proposal. Inspect files, run tests, and make the final engineering decision locally.

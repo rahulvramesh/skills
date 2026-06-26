@@ -5,7 +5,7 @@ description: Use the local `grok` CLI as an auxiliary agent for quick answers, s
 
 # Grok CLI
 
-Use Grok as a second agent, not as the source of authority. Let it generate alternatives, critique UI/product decisions, or draft implementation approaches, then verify the result locally before acting on it.
+Use Grok as a full auxiliary agent, not as the source of authority. Let it use its available tools, MCP servers, subagents, web access, memory, and file/terminal capabilities when the task benefits from them, then verify the result locally before acting on it.
 
 ## Quick Start
 
@@ -14,16 +14,14 @@ Prefer the bundled wrapper for headless calls because raw `grok` output can incl
 ```bash
 python3 scripts/grok_headless.py \
   --cwd "$PWD" \
-  --tools "" \
   --text \
   "Give a concise second opinion on this implementation plan: ..."
 ```
 
-For direct CLI use, keep fast runs serial and low scope:
+For direct CLI use, keep Grok's tools available and grant full permission explicitly:
 
 ```bash
-grok --no-wait-for-background --max-turns 1 --disable-web-search --no-subagents --no-memory \
-  --output-format json \
+grok --cwd "$PWD" --always-approve --permission-mode bypassPermissions --output-format json \
   -p "Return a concise critique of this UI direction: ..."
 ```
 
@@ -33,7 +31,7 @@ Do not pass `--effort` to the default `grok-composer-2.5-fast` model unless `gro
 
 1. Run `grok --version` and `grok models` when the task depends on current capabilities.
 2. Run `grok inspect --json` when configuration, available skills, agents, plugins, MCP servers, or project trust matters.
-3. Use `scripts/grok_headless.py` for quick second opinions, design critiques, naming/strategy alternatives, and structured JSON/text output.
+3. Use `scripts/grok_headless.py` for quick second opinions, design critiques, naming/strategy alternatives, and structured JSON/text output. Its default mode leaves tools, MCP, web, subagents, and memory available, and passes full tool permission.
 4. Use prompt files for long briefs instead of huge shell-quoted prompts.
 5. Use a disposable `work/` project or a git worktree before allowing Grok to edit files.
 6. Verify Grok-created code, designs, or files with the repo's normal tools. Treat Grok output as a proposal until validated.
@@ -42,7 +40,7 @@ Do not pass `--effort` to the default `grok-composer-2.5-fast` model unless `gro
 
 ### Quick Solution
 
-Use one serial headless request, no web, no subagents, no memory:
+Use one headless request with Grok's available tools and MCP left enabled:
 
 ```bash
 python3 scripts/grok_headless.py \
@@ -56,12 +54,11 @@ Give Grok the target user, product type, constraints, and screenshots/files if a
 
 ```bash
 python3 scripts/grok_headless.py \
-  --tools "" \
   --prompt-file /absolute/path/to/design-brief.md \
   --text
 ```
 
-For no-tool critique, state inside the prompt file that the brief is complete and Grok must answer from the brief only. Otherwise Grok may spend the turn saying it will inspect the workspace.
+If a run must be answer-only, opt out explicitly with `--tools ""`, `--disable-web-search`, `--no-subagents`, or `--no-memory`. Do not use those flags by default.
 
 ### File-Editing Experiment
 
@@ -69,8 +66,7 @@ Use a disposable folder or worktree and explicit permissions. Verify diffs after
 
 ```bash
 grok --cwd /absolute/path/to/lab --fs-read --fs-write --terminal \
-  --always-approve --permission-mode acceptEdits \
-  --background-wait-timeout 60 --max-turns 4 --disable-web-search \
+  --always-approve --permission-mode bypassPermissions \
   -p "Create a small static HTML prototype for ..."
 ```
 
@@ -86,7 +82,9 @@ grok -r <session-id> "Continue with only the missing verification steps"
 
 ## Guardrails
 
-- Avoid mutating commands unless the user explicitly asked for that operation: `grok logout`, `grok memory clear`, `grok sessions delete`, `grok leader kill`, `grok plugin install/update/disable/uninstall`, `grok setup`, `grok update` without `--check`, and destructive worktree commands.
+- Give Grok its available tools by default. Only restrict tools, MCP, web, memory, or subagents when the user asks for a constrained run.
+- Full permission is the default for this skill's wrapper. Use `--review-permissions` only when the user explicitly wants Grok to ask before tools.
+- Avoid account/configuration mutations unless the user explicitly asked for that operation: `grok logout`, `grok memory clear`, `grok sessions delete`, `grok leader kill`, `grok plugin install/update/disable/uninstall`, `grok setup`, `grok update` without `--check`, and destructive worktree commands.
 - Avoid parallel Grok model calls; this environment has shown low request-rate limits.
 - Prefer `--output-format json` over `streaming-json` for automation. Streaming JSON exposes token events and includes thought events.
 - Capture stderr separately for automation. Stderr may contain plugin collision warnings, hook warnings, and MCP auth/timeouts even when the final answer succeeds.
