@@ -21,7 +21,7 @@ def read_prompt(args: argparse.Namespace) -> str:
 
 
 def build_command(args: argparse.Namespace, prompt: str) -> list[str]:
-    cmd = ["agy", "--print-timeout", args.timeout]
+    cmd = ["agy"]
     if args.model:
         cmd.extend(["--model", args.model])
     for directory in args.add_dir:
@@ -49,7 +49,7 @@ def main() -> int:
     parser.add_argument("--cwd", default=".", help="Working directory for agy")
     parser.add_argument("--add-dir", action="append", default=[], help="Workspace directory to attach; repeatable")
     parser.add_argument("--model", help="Exact model name from `agy models`")
-    parser.add_argument("--timeout", default="90s", help="agy print timeout, for example 90s or 2m")
+    parser.add_argument("--timeout", help="Deprecated no-op; this wrapper does not pass --print-timeout to agy.")
     parser.add_argument("--project", help="Antigravity project ID")
     parser.add_argument("--new-project", action="store_true", help="Create a new Antigravity project")
     parser.add_argument("--continue", dest="continue_latest", action="store_true", help="Continue the latest conversation")

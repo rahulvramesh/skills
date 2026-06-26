@@ -96,7 +96,7 @@ def main() -> int:
     parser.add_argument("--prompt-json", help="JSON content blocks for Grok.")
     parser.add_argument("--output-format", choices=["plain", "json", "streaming-json"], default="json")
     parser.add_argument("--max-turns", type=int, default=None)
-    parser.add_argument("--timeout", type=int, default=180)
+    parser.add_argument("--timeout", type=int, default=None, help="Optional Python subprocess timeout in seconds. Omit for no wrapper timeout.")
     parser.add_argument("--background-wait", dest="wait_background", action="store_true", help="Wait for background work; this is the default.")
     parser.add_argument("--no-wait-for-background", dest="wait_background", action="store_false", help="Return without waiting for background work.")
     parser.set_defaults(wait_background=True)

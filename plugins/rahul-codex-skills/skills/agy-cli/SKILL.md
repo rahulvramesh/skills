@@ -15,14 +15,13 @@ Prefer the bundled wrapper for headless calls. Resolve `scripts/agy_headless.py`
 python3 scripts/agy_headless.py \
   --cwd "$PWD" \
   --add-dir "$PWD" \
-  --timeout 90s \
   "Give a concise second opinion on this implementation plan: ..."
 ```
 
 For direct CLI use, attach the workspace and grant full permission explicitly:
 
 ```bash
-agy --print-timeout 90s --add-dir "$PWD" --dangerously-skip-permissions \
+agy --add-dir "$PWD" --dangerously-skip-permissions \
   -p "Return a concise critique of this UI direction: ..."
 ```
 
@@ -32,7 +31,7 @@ agy --print-timeout 90s --add-dir "$PWD" --dangerously-skip-permissions \
 2. Run `agy models` before pinning a model. Use the exact displayed model name; this CLI may not visibly fail for an invalid model name.
 3. Use `--add-dir /absolute/path` whenever `agy` should read or write a real repo or project directory.
 4. Keep sandboxing off unless the user asks for a scratch-only run. In local testing, file writes without a workspace, or with sandboxing, may land in `~/.gemini/antigravity-cli/scratch` instead of the shell cwd.
-5. The bundled wrapper passes `--dangerously-skip-permissions` by default so `agy` can use its tools without permission prompts. Pass `--review-permissions` only when the user explicitly wants review mode.
+5. The bundled wrapper passes `--dangerously-skip-permissions` by default so `agy` can use its tools without permission prompts. It intentionally does not pass `--print-timeout`; pass `--review-permissions` only when the user explicitly wants review mode.
 6. Inspect any `agy`-created diff or artifact and run the repo's normal checks before treating the result as done.
 
 ## Task Patterns
@@ -44,7 +43,6 @@ Keep the prompt bounded, but leave tools and MCP available:
 ```bash
 python3 scripts/agy_headless.py \
   --cwd "$PWD" \
-  --timeout 90s \
   "Find the simplest robust fix for: <problem>. Return bullets with risks."
 ```
 
@@ -68,7 +66,6 @@ Use a disposable directory or worktree. Always pass `--add-dir` for the target d
 python3 scripts/agy_headless.py \
   --cwd "$PWD" \
   --add-dir "$PWD" \
-  --timeout 2m \
   "Create a small static HTML prototype in this directory. Do not modify anything else."
 ```
 
@@ -87,13 +84,13 @@ python3 scripts/agy_headless.py \
 Continue the most recent conversation:
 
 ```bash
-agy --print-timeout 90s -c -p "Continue with only the missing verification steps."
+agy -c -p "Continue with only the missing verification steps."
 ```
 
 Resume a specific conversation ID:
 
 ```bash
-agy --print-timeout 90s --conversation <conversation-id> -p "Summarize the prior plan and next action."
+agy --conversation <conversation-id> -p "Summarize the prior plan and next action."
 ```
 
 Useful state locations:
