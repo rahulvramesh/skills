@@ -25,6 +25,18 @@ Use the local Antigravity `agy` CLI as an auxiliary agent for:
 
 Dependencies: `agy` CLI and a working Antigravity login.
 
+## codex-cli
+
+Use the local `codex` CLI as an auxiliary Codex agent for:
+
+- full-permission headless implementation
+- additional same-stack code review passes
+- JSONL event streaming and final-message capture
+- MCP, plugin, feature, and doctor diagnostics
+- session resume and Codex-specific workflows
+
+Dependencies: `codex` CLI and a working Codex login.
+
 ## imagegen
 
 Generate or edit images through the OpenAI Image API with a bundled Python CLI.

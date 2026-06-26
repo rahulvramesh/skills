@@ -1,7 +1,7 @@
 {
   "name": "rahul-codex-skills",
-  "version": "0.2.2",
-  "description": "Reusable Codex skills for image generation, Grok CLI workflows, and Antigravity CLI workflows.",
+  "version": "0.3.0",
+  "description": "Reusable Codex skills for image generation, Grok CLI workflows, Antigravity CLI workflows, and Codex CLI workflows.",
   "author": {
     "name": "Rahul V Ramesh",
     "url": "https://github.com/rahulvramesh"
@@ -16,13 +16,14 @@
     "image-generation",
     "grok",
     "antigravity",
-    "agy"
+    "agy",
+    "codex-cli"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Rahul Codex Skills",
     "shortDescription": "Reusable Codex workflows by Rahul V Ramesh.",
-    "longDescription": "A curated bundle of Codex skills for OpenAI Image API work, Grok CLI second-opinion workflows, and Antigravity CLI workflows.",
+    "longDescription": "A curated bundle of Codex skills for OpenAI Image API work, Grok CLI second-opinion workflows, Antigravity CLI workflows, and Codex CLI workflows.",
     "developerName": "Rahul V Ramesh",
     "category": "Productivity",
     "capabilities": [
@@ -34,7 +35,7 @@
     "defaultPrompt": [
       "Use $grok-cli to critique this plan.",
       "Use $agy-cli to get an Antigravity second opinion.",
-      "Use $imagegen to create a product visual."
+      "Use $codex-cli to run a headless Codex review."
     ],
     "brandColor": "#2563EB"
   }

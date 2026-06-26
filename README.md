@@ -6,6 +6,7 @@ Reusable Codex skills packaged as an installable plugin and marketplace.
 
 - `grok-cli`: use the local `grok` CLI as a second-opinion agent for quick solutions, design critique, headless automation, and session inspection.
 - `agy-cli`: use the local Antigravity `agy` CLI for quick solutions, design critique, disposable builds, conversation resume, and plugin diagnostics.
+- `codex-cli`: use the local `codex` CLI for full-permission headless Codex agent runs, JSONL event logs, code review, and Codex diagnostics.
 - `imagegen`: generate and edit images through the OpenAI Image API using a reproducible bundled CLI.
 
 ## Why This Layout
@@ -50,6 +51,7 @@ Invoke a skill explicitly:
 ```text
 Use $grok-cli to critique this implementation plan.
 Use $agy-cli to get an Antigravity second opinion on this UI.
+Use $codex-cli to run a full-permission headless review of this repo.
 Use $imagegen to create a product hero image.
 ```
 
@@ -74,6 +76,7 @@ python3 ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py plugin
 - `imagegen` requires `OPENAI_API_KEY` for live API calls.
 - `grok-cli` requires the `grok` CLI and a working Grok login.
 - `agy-cli` requires the `agy` Antigravity CLI and a working Antigravity login.
+- `codex-cli` requires the `codex` CLI and a working Codex login.
 
 ## References
 
